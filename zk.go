@@ -90,11 +90,6 @@ func ZkErrorEqual(a, b error) bool {
 // Create a path and any pieces required, think mkdir -p.
 // Intermediate znodes are always created empty.
 func CreateRecursive(zconn Conn, zkPath, value string, flags int, aclv []zk.ACL) (pathCreated string, err error) {
-	parts := strings.Split(zkPath, "/")
-	if parts[1] != MagicPrefix {
-		return "", fmt.Errorf("zkutil: non /%v path: %v", MagicPrefix, zkPath)
-	}
-
 	pathCreated, err = zconn.Create(zkPath, []byte(value), int32(flags), aclv)
 	if ZkErrorEqual(err, zk.ErrNoNode) {
 		// Make sure that nodes are either "file" or "directory" to mirror file system
