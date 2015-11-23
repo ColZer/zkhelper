@@ -349,7 +349,7 @@ func (e *etcdImpl) doKeepAlive(key string, ttl uint64) error {
 func (e *etcdImpl) keepAlive(key string, ttl uint64) {
 	go func() {
 		for {
-			time.Sleep(1 * time.Second)
+			time.Sleep(9 * time.Second)
 			err := e.doKeepAlive(key, ttl)
 			if err != nil {
 				log.Error(err)
@@ -362,9 +362,9 @@ func (e *etcdImpl) keepAlive(key string, ttl uint64) {
 func (e *etcdImpl) Create(wholekey string, value []byte, flags int32, aclv []zk.ACL) (keyCreated string, err error) {
 	seq := (flags & zk.FlagSequence) != 0
 	tmp := (flags & zk.FlagEphemeral) != 0
-	ttl := uint64(MAX_TTL)
+	ttl := 0
 	if tmp {
-		ttl = 5
+		ttl = 30
 	}
 
 	var resp *etcd.Response
