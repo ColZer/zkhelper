@@ -199,12 +199,14 @@ func (e *etcdImpl) watch(key string, children bool) (resp *etcd.Response, stat z
 
 			c := conn.(*PooledEtcdClient).c
 
-			resp, err := c.Watch(key, index, children, nil, nil)
+			resp, err := c.Watch(key, 0, children, nil, nil)
 			e.pool.Put(conn)
 
 			if err != nil {
 				if ec, ok := err.(*etcd.EtcdError); ok {
 					if ec.ErrorCode == etcderr.EcodeEventIndexCleared {
+						// now we only watch latest event, so it must not happen
+						log.Warn("still see EcodeEventIndexCleared")
 						index++
 						continue
 					}
