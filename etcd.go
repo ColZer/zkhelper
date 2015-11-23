@@ -362,7 +362,7 @@ func (e *etcdImpl) keepAlive(key string, ttl uint64) {
 func (e *etcdImpl) Create(wholekey string, value []byte, flags int32, aclv []zk.ACL) (keyCreated string, err error) {
 	seq := (flags & zk.FlagSequence) != 0
 	tmp := (flags & zk.FlagEphemeral) != 0
-	ttl := 0
+	ttl := uint64(0)
 	if tmp {
 		ttl = 30
 	}
